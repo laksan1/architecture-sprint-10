@@ -1,0 +1,70 @@
+@startuml
+title Warehouse Inventory Management (To-Be + Enhanced Security)
+
+skinparam shadowing false
+skinparam backgroundColor #FAFAFA
+skinparam ArrowColor #333333
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam actor {
+  BackgroundColor<<Warehouse>> #F5F5DC
+  BorderColor<<Warehouse>> #C2B280
+  FontColor black
+
+  BackgroundColor<<Bookkeeper>> #E0F7FA
+  BorderColor<<Bookkeeper>> #0097A7
+  FontColor black
+}
+
+actor "Warehouse Keeper" as WarehouseKeeper <<Warehouse>>
+actor "Bookkeeper" as Bookkeeper <<Bookkeeper>>
+
+database "1C:Warehouse\n(file-based, TMC data)\n🔒 Тег: #tmc" as OneCWarehouse #LightGreen
+database "1C:Accounting\n(file-based)\n🔒 Теги: #financial, #tmc" as OneCAccounting #LightPink
+
+database "Audit Logs\n(операции и доступ)" as Audit #LightYellow
+rectangle "Access Control\n(RBAC / ABAC)" as AccessControl #White
+
+' Упорядочим элементы по вертикали
+OneCWarehouse -[hidden]-> OneCAccounting
+OneCWarehouse -[hidden]-> Audit
+OneCWarehouse -[hidden]-> AccessControl
+
+' Склад → 1С:Склад
+WarehouseKeeper --> OneCWarehouse : 🖐 Ввод данных о ТМЦ
+WarehouseKeeper --> Audit : 🔍 Лог действий
+WarehouseKeeper --> AccessControl : 🔑 Проверка доступа
+
+' Бухгалтер → 1С:Бухгалтерия
+Bookkeeper --> OneCAccounting : 🖐 Проводки, платежи
+Bookkeeper --> Audit : 🔍 Лог операций
+Bookkeeper --> AccessControl : 🔑 Проверка доступа
+
+' Интеграция между системами
+OneCWarehouse --> OneCAccounting : 📂 Экспорт файлов с движением ТМЦ
+
+' Примечания
+note right of OneCWarehouse
+  📦 Учёт ТМЦ в 1С (файловый режим)
+  ❌ Нет разграничения прав
+  🛡️ Требуется: аудит, контроль доступа
+  🏷️ Тег: #tmc
+end note
+
+note right of OneCAccounting
+  💰 Учет финансов, платежей, ТМЦ
+  ❌ Нет автоматической интеграции
+  🛡️ Рекомендуется TLS, TDE
+  🏷️ Теги: #financial, #tmc
+end note
+
+legend left
+  📦 #tmc — товарно-материальные ценности
+  💰 #financial — финансовые записи
+  🖐 Ручной ввод
+  🔍 Журнал доступа (аудит)
+  🔑 RBAC / ABAC
+end legend
+
+@enduml
