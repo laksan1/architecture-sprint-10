@@ -1,28 +1,75 @@
 @startuml
-title C4 Context Diagram (To-Be): Privacy by Design
-
 !includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
 LAYOUT_TOP_DOWN()
+title C4 Context Diagram (To-Be): Privacy by Design
 
-' Определение пользователей
-Person(client, "Клиент", "Пациент, врач, бухгалтер и т.п.")
-Person(employee, "Сотрудник", "Врач, бухгалтер и т.п.")
+' Пользователи
+Person(client, "Клиент", "Пациент, использует мобильное приложение и портал")
+Person(employee, "Сотрудник", "Медперсонал, бухгалтер, ресепшен")
+Person(dpo, "Data Protection Officer", "Контроль доступа, аудит и безопасность данных")
 
-System_Boundary(system, "Medikamente Platform") {
-
-  System(apiGateway, "API Gateway", "Аунтентификация + RBAC")
-
-  System(webPortal, "WEB портал", "Angular")
-
+' Клиентский слой
+System_Boundary(clientLayer, "Клиентский слой", #87CEFA) {
+  System(webPortal, "WEB портал", "Angular: доступ сотрудников и пациентов")
+  System(mobileApp, "Мобильное приложение", "React Native / Flutter")
 }
 
+' Сервисный слой
+System_Boundary(serviceLayer, "Сервисный слой", #B0C4DE) {
+  System(apiGateway, "API Gateway", "Аутентификация, RBAC / ABAC")
+  System(crm, "CRM система", "Управление клиентами и договорами")
+  System(paymentService, "PaymentService", "Интеграция с банком, KKM")
+  System(labIntegration, "Интеграция с лабораториями", "API + очистка данных")
+}
 
-System_Ext(laboratory, "Лаборатория")
-System_Ext(bank, "Банк")
+' Управление данными
+System_Boundary(dataLayer, "Управление данными", #00BFFF) {
+  System(dataTagging, "Data Tagging Service", "Тегирование и классификация данных (PII, SPII и др.)")
+  System(etlPlatform, "ETL / Data Integration", "Apache NiFi, Airflow, Kafka")
+  System(dataLake, "Data Lake / Warehouse", "PostgreSQL, ClickHouse, Object Storage")
+}
 
-Rel(client, apiGateway, "REST")
-Rel(apiGateway, webPortal, "REST")
-Rel(laboratory, apiGateway, "REST")
+' Аналитика и мониторинг
+System_Boundary(analyticsLayer, "Аналитика и мониторинг", #4682B4) {
+  System(analytics, "BI/ML/AI Аналитика", "Superset, Jupyter, AutoML")
+  System(dataCatalog, "Apache Atlas", "Каталог, теги, Data Lineage")
+  System(monitoring, "Мониторинг и аудит", "Audit logs, алерты, SIEM")
+}
+
+' Внешние системы
+System_Ext(bank, "Банк", "Эквайринг и платежи")
+System_Ext(laboratory, "Лаборатория", "Отправка результатов")
+
+' Связи пользователей
+Rel(client, webPortal, "HTTPS")
+Rel(client, mobileApp, "HTTPS")
+Rel(employee, webPortal, "HTTPS")
+Rel(dpo, dataCatalog, "Анализ тегов и политик")
+Rel(dpo, monitoring, "Реакция на инциденты")
+
+' Основные потоки данных и вызовы API
+Rel(webPortal, apiGateway, "REST: Авторизация и маршрутизация")
+Rel(mobileApp, apiGateway, "REST: Авторизация и маршрутизация")
+Rel(apiGateway, crm, "REST API")
+Rel(apiGateway, paymentService, "REST API")
+Rel(apiGateway, labIntegration, "REST API")
+
+Rel(crm, dataTagging, "Передача данных")
+Rel(paymentService, dataTagging, "Тегирование финансовых данных")
+Rel(labIntegration, dataTagging, "Тегирование медицинских данных")
+
+Rel(dataTagging, etlPlatform, "Очищенные данные")
+Rel(etlPlatform, dataLake, "Загрузка Batch/Streaming")
+Rel(dataLake, analytics, "Аналитика")
+
+Rel(dataTagging, dataCatalog, "Регистрация тегов")
+Rel(etlPlatform, dataCatalog, "Регистрация объектов")
+Rel(dataLake, dataCatalog, "Метаданные")
+Rel(analytics, dataCatalog, "Чтение разрешённых датасетов")
+Rel(dataCatalog, monitoring, "Мониторинг политик")
+
+Rel(paymentService, bank, "HTTPS / PCI DSS")
+Rel(laboratory, labIntegration, "HTTPS + Token")
 
 @enduml
