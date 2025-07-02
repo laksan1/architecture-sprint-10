@@ -1,0 +1,48 @@
+@startuml
+title Warehouse Inventory Management (As-Is)
+
+skinparam shadowing false
+skinparam backgroundColor #FAFAFA
+skinparam ArrowColor #333333
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam actor {
+  BackgroundColor<<Warehouse>> #F5F5DC
+  BorderColor<<Warehouse>> #C2B280
+  FontColor black
+
+  BackgroundColor<<Bookkeeper>> #E0F7FA
+  BorderColor<<Bookkeeper>> #0097A7
+  FontColor black
+}
+
+actor "Warehouse Keeper" as WarehouseKeeper <<Warehouse>>
+actor "Bookkeeper" as Bookkeeper <<Bookkeeper>>
+
+database "1C:Warehouse\n(file-based, TMC data)" as OneCWarehouse #LightGreen
+database "1C:Accounting\n(file-based)" as OneCAccounting #LightPink
+
+WarehouseKeeper --> OneCWarehouse : Вводит данные по ТМЦ вручную
+Bookkeeper --> OneCAccounting : Обрабатывает платежи и бух. данные
+OneCWarehouse --> OneCAccounting : Передаёт данные о движении ТМЦ (файлы)
+
+note right of OneCWarehouse
+  Система учёта ТМЦ в 1С работает в файловом режиме\n
+  ❌ Нет разграничения прав доступа\n
+  ❌ Нет журналирования операций
+end note
+
+note right of OneCAccounting
+  Отсутствует автоматическая интеграция\n
+  ❌ Обмен происходит вручную через файлы\n
+  🖐 Возможны ошибки и дублирование данных
+end note
+
+legend left
+  🖐 Ручной ввод данных
+  ❌ Нет автоматизации и контроля доступа
+  📦 ТМЦ — товарно-материальные ценности
+end legend
+
+@enduml

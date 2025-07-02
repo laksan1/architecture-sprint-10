@@ -7,7 +7,6 @@ skinparam ArrowColor #333333
 skinparam defaultTextAlignment center
 skinparam linetype ortho
 
-' Актёры
 skinparam actor {
   BackgroundColor<<Cashier>> #FFF2B2
   BorderColor<<Cashier>> #D4A017
@@ -22,12 +21,10 @@ actor Patient
 actor "Cashier" as Cashier <<Cashier>>
 actor "Bookkeeper" as Bookkeeper <<Bookkeeper>>
 
-' Сущности
 database "1C:Accounting\n(file-based, local network)" as OneC #LightGreen
 rectangle "Cash Register\n(KKM - OLE integration)" as KKM #LightGray
 database "Patient Files\n(Excel, PDF — contains PII)" as PatientFiles #LightPink
 
-' Потоки данных
 Patient --> Cashier : Оплачивает услугу (наличными / картой)
 Cashier --> KKM : Вводит сумму вручную
 KKM --> OneC : Отправляет данные оплаты (OLE)
@@ -35,7 +32,6 @@ Cashier --> OneC : Сверяет транзакции вручную
 Cashier --> PatientFiles : Отмечает факт оплаты вручную
 Bookkeeper --> OneC : Просматривает оплату / готовит отчёты
 
-' Проблемы
 note right of OneC
   1С работает в файловом режиме\n
   ❌ Нет автоматического контроля доступа\n
