@@ -1,0 +1,28 @@
+@startuml
+title C4 Context Diagram (To-Be): Privacy by Design
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_TOP_DOWN()
+
+' Определение пользователей
+Person(client, "Клиент", "Пациент, врач, бухгалтер и т.п.")
+Person(employee, "Сотрудник", "Врач, бухгалтер и т.п.")
+
+System_Boundary(system, "Medikamente Platform") {
+
+  System(apiGateway, "API Gateway", "Аунтентификация + RBAC")
+
+  System(webPortal, "WEB портал", "Angular")
+
+}
+
+
+System_Ext(laboratory, "Лаборатория")
+System_Ext(bank, "Банк")
+
+Rel(client, apiGateway, "REST")
+Rel(apiGateway, webPortal, "REST")
+Rel(laboratory, apiGateway, "REST")
+
+@enduml
