@@ -6,32 +6,40 @@
 
 #### 🔍 As-Is (Текущее состояние)
 
-- [📌 Запись пациента](./as-is/DFD_patient_registration_process.puml)  
+- [📌 Запись пациента](./as-is/DFD_patient_registration_process.puml)
+
   ![Скриншот: Запись пациента](./as-is/DFD_patient_registration_process.png)
 
-- [📌 Обработка анализов пациента](./as-is/DFD_medical_data_processing.puml)  
+- [📌 Обработка анализов пациента](./as-is/DFD_medical_data_processing.puml)
+
   ![Скриншот: Обработка анализов пациента](./as-is/DFD_medical_data_processing.png)
 
-- [📌 Обработка платежей](./as-is/DFD_payment.puml)  
+- [📌 Обработка платежей](./as-is/DFD_payment.puml)
+
   ![Скриншот: Обработка платежей](./as-is/DFD_payment.png)
 
-- [📌 Учет ТМЦ](./as-is/DFD_warehouse_inventory_management.puml)  
+- [📌 Учет ТМЦ](./as-is/DFD_warehouse_inventory_management.puml)
+
   ![Скриншот: Учет ТМЦ](./as-is/DFD_warehouse_inventory_management.png)
 
 ---
 
 #### 🚀 To-Be (Целевое состояние)
 
-- [🔧 Запись пациента (To-Be)](./to-be/DFD_patient_registration_process_to_be.puml)  
+- [🔧 Запись пациента (To-Be)](./to-be/DFD_patient_registration_process_to_be.puml)
+
   ![Скриншот: Запись пациента (To-Be)](./to-be/DFD_patient_registration_process_to_be.png)
 
-- [🔧 Обработка анализов пациента (To-Be)](./to-be/DFD_medical_data_processing_to_be.puml)  
+- [🔧 Обработка анализов пациента (To-Be)](./to-be/DFD_medical_data_processing_to_be.puml)
+
   ![Скриншот: Обработка анализов пациента (To-Be)](./to-be/DFD_medical_data_processing_to_be.png)
 
-- [🔧 Обработка платежей (To-Be)](./to-be/DFD_payment_to_be.puml)  
+- [🔧 Обработка платежей (To-Be)](./to-be/DFD_payment_to_be.puml)
+
   ![Скриншот: Обработка платежей (To-Be)](./to-be/DFD_payment_to_be.png)
 
-- [🔧 Учет ТМЦ (To-Be)](./to-be/DFD_warehouse_inventory_management_to_be.puml)  
+- [🔧 Учет ТМЦ (To-Be)](./to-be/DFD_warehouse_inventory_management_to_be.puml)
+
   ![Скриншот: Учет ТМЦ (To-Be)](./to-be/DFD_warehouse_inventory_management_to_be.png)
 
 ---
