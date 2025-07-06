@@ -15,8 +15,13 @@
 
 ## 🐟 Диаграмма Исикавы (Fishbone Diagram)
 
-📄 [📌 Открыть диаграмму в draw.io](./Task4/ishikawa-bottlenecks.drawio)  
-🖼️ ![Скриншот: Диаграмма Исикавы](./Task4/ishikawa-bottlenecks.png)
+📄 [📌 Открыть диаграмму в draw.io](./ishikawa-diagram.drawio)
+
+🖼️ ![Скриншот: Диаграмма Исикавы Drawio](./ishikawa-diagram_drawio.png)
+
+📄 [📌 Открыть диаграмму в Puml](./ishikawa-bottlenecks_uml_.puml)
+
+🖼️ ![Скриншот: Диаграмма Исикавы Puml](./ishikawa-bottlenecks_uml.png)
 
 _Диаграмма помогает выявить первопричины узких мест в процессе миграции: от инфраструктуры до кадров и процессов._
 
