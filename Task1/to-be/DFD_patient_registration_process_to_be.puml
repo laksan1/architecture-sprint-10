@@ -1,0 +1,63 @@
+@startuml
+title Patient Registration Process (To-Be + Enhanced Security)
+
+skinparam shadowing false
+skinparam backgroundColor #FAFAFA
+skinparam ArrowColor #333333
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam actor {
+  BackgroundColor<<Receptionist>> #FFF2B2
+  BorderColor<<Receptionist>> #D4A017
+  FontColor black
+}
+
+actor Patient
+actor "Receptionist" as Receptionist <<Receptionist>>
+
+database "Excel Register\n(local file, содержит #pii)" as ExcelRegister #LightBlue
+database "1C:Contract System\n(file-based, содержит #pii, #financial)" as OneCContract #LightGreen
+
+Patient --> Receptionist : 🔒 Передача PII (ФИО, ДР, тел., email)\n🛡️ По защищённой сети (TLS)
+
+Receptionist --> ExcelRegister : 🖐 Ввод PII вручную\n🛡️ Шифрование BitLocker\n🛑 Нет разграничения доступа (RBAC отсутствует)\n❌ Нет аудита
+Receptionist --> OneCContract : 🖐 Повторный ввод PII\n🛡️ Файловое шифрование\n⚠️ Нет контроля целостности данных\n❌ Нет автоматической синхронизации с Excel
+
+note right of ExcelRegister
+  💾 Общий сетевой диск
+  🔒 Тегирование: #pii
+  🛡️ Шифрование: BitLocker
+  ❌ Нет RBAC и аудита доступа
+  ⚠️ Риски утечки и ошибок при ручном вводе
+end note
+
+note right of OneCContract
+  💼 Локальная 1С в файловом режиме
+  🔒 Теги: #pii, #financial
+  🛡️ Шифрование: файловая система
+  ⚠️ Нет интеграции с Excel
+  ❌ Нет аудита и разграничения прав на уровне данных
+end note
+
+database "Audit Logs" as AuditLogs #LightYellow
+Receptionist --> AuditLogs : 🔍 Логирование действий пользователя (ввод, просмотр)
+
+rectangle "Access Control\nRBAC/ABAC policies" as AccessControl #LightPink
+Receptionist --> AccessControl : Проверка прав доступа к данным
+
+note left of Receptionist
+  🎯 Минимизация: собирать только необходимые PII поля
+end note
+
+legend left
+  🔒 #pii — персональные данные
+  🛡️ Шифрование данных (BitLocker, TLS)
+  🖐 Ручной ввод данных
+  🔍 Аудит действий (логирование)
+  🎯 Data Minimization — сбор и хранение минимально необходимых данных
+  🔑 RBAC/ABAC — разграничение доступа
+  ⚠️ Риски дублирования, утечки, ошибок из-за ручного процесса
+end legend
+
+@enduml

@@ -1,0 +1,54 @@
+@startuml
+title Payment Processing (As-Is)
+
+skinparam shadowing false
+skinparam backgroundColor #FAFAFA
+skinparam ArrowColor #333333
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam actor {
+  BackgroundColor<<Cashier>> #FFF2B2
+  BorderColor<<Cashier>> #D4A017
+  FontColor black
+
+  BackgroundColor<<Bookkeeper>> #E0F7FA
+  BorderColor<<Bookkeeper>> #0097A7
+  FontColor black
+}
+
+actor Patient
+actor "Cashier" as Cashier <<Cashier>>
+actor "Bookkeeper" as Bookkeeper <<Bookkeeper>>
+
+database "1C:Accounting\n(file-based, local network)" as OneC #LightGreen
+rectangle "Cash Register\n(KKM - OLE integration)" as KKM #LightGray
+database "Patient Files\n(Excel, PDF — contains PII)" as PatientFiles #LightPink
+
+Patient --> Cashier : Оплачивает услугу (наличными / картой)
+Cashier --> KKM : Вводит сумму вручную
+KKM --> OneC : Отправляет данные оплаты (OLE)
+Cashier --> OneC : Сверяет транзакции вручную
+Cashier --> PatientFiles : Отмечает факт оплаты вручную
+Bookkeeper --> OneC : Просматривает оплату / готовит отчёты
+
+note right of OneC
+  1С работает в файловом режиме\n
+  ❌ Нет автоматического контроля доступа\n
+  ❌ Нет аудита операций
+end note
+
+note right of PatientFiles
+  Данные пациента (PII) хранятся в Excel/PDF\n
+  ❌ Нет шифрования\n
+  ❌ Нет связки с 1С\n
+  🖐 Ручное обновление
+end note
+
+legend left
+  🔒 PII — персональные данные\n(ФИО, оплаты, договор)
+  🖐 Ручной ввод данных
+  ❌ Нет автоматизации и защиты
+end legend
+
+@enduml

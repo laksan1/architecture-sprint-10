@@ -1,0 +1,42 @@
+@startuml
+title Patient Registration Process (As-Is)
+
+skinparam shadowing false
+skinparam backgroundColor #FAFAFA
+skinparam ArrowColor #333333
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam actor {
+  BackgroundColor<<Receptionist>> #FFF2B2
+  BorderColor<<Receptionist>> #D4A017
+  FontColor black
+}
+
+actor Patient
+actor "Receptionist" as Receptionist <<Receptionist>>
+
+database "Excel Register\n(local file, contains PII)" as ExcelRegister #LightBlue
+database "1C:Contract System\n(file-based, duplicate PII)" as OneCContract #LightGreen
+
+Patient --> Receptionist : Передаёт персональные данные (PII)\nФИО, дата рождения, телефон, email
+Receptionist --> ExcelRegister : Вводит PII вручную
+Receptionist --> OneCContract : Повторно вводит PII вручную\nдля оформления контракта
+
+note right of ExcelRegister
+  Данные хранятся в Excel на общем сетевом диске
+  Нет шифрования, нет разграничения прав
+end note
+
+note right of OneCContract
+  Система работает в файловом режиме
+  Интеграция с Excel отсутствует
+end note
+
+legend left
+  🔒 PII — персональные данные
+  🖐 Ручной ввод данных
+  ❌ Нет автоматизации
+end legend
+
+@enduml

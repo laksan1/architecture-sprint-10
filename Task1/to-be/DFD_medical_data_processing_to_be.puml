@@ -1,0 +1,53 @@
+@startuml
+title Medical Data Processing (To-Be + Enhanced Security)
+
+skinparam shadowing false
+skinparam backgroundColor #FAFAFA
+skinparam ArrowColor #333333
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam actor {
+  BackgroundColor<<Doctor>> #FFDFDF
+  BorderColor<<Doctor>> #B22222
+  FontColor black
+}
+
+actor Patient
+actor "Doctor" as Doctor <<Doctor>>
+
+database "Medical Records\n(Excel, PDF, JPG — содержит #spii)" as MedRecords #LightPink
+
+Patient --> Doctor : 🔒 Передаёт SPII (жалобы, симптомы, анамнез)\n🛡️ Через защищённый канал (TLS)
+
+Doctor --> MedRecords : 🖐 Ввод SPII вручную\n🛡️ Шифрование файлов (AES-256, BitLocker)\n❌ Нет разграничения доступа (RBAC/ABAC отсутствует)\n❌ Нет аудита доступа
+
+database "Audit Logs" as AuditLogs #LightYellow
+Doctor --> AuditLogs : 🔍 Логирование действий врача (просмотр, ввод, редактирование)
+
+rectangle "Access Control\nRBAC/ABAC policies" as AccessControl #LightPink
+Doctor --> AccessControl : Проверка прав доступа к медицинским данным
+
+note left of Doctor
+  🎯 Сбор только необходимых для диагностики данных
+end note
+
+note right of MedRecords
+  💾 Хранятся на общем сетевом диске
+  🔒 Тегирование: #spii
+  🛡️ Шифрование: AES-256, BitLocker
+  ❌ Нет контроля доступа и аудита
+  ⚠️ Риски утечки и несанкционированного доступа
+end note
+
+legend left
+  🔒 #spii — чувствительные персональные данные
+  🛡️ Шифрование (AES-256, BitLocker), TLS
+  🖐 Ручной ввод данных
+  🔍 Аудит действий
+  🎯 Data Minimization — сбор минимально необходимых данных
+  🔑 RBAC/ABAC — разграничение доступа
+  ⚠️ Риски из-за отсутствия автоматизации и контроля
+end legend
+
+@enduml

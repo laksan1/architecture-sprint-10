@@ -1,0 +1,35 @@
+@startuml
+title  Medical Data Processing (As-Is)
+
+skinparam shadowing false
+skinparam backgroundColor #FAFAFA
+skinparam ArrowColor #333333
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+skinparam actor {
+  BackgroundColor<<Doctor>> #FFDFDF
+  BorderColor<<Doctor>> #B22222
+  FontColor black
+}
+
+actor Patient
+actor "Doctor" as Doctor <<Doctor>>
+
+database "Medical Records\n(Excel, PDF, JPG — contains SPII)" as MedRecords #LightPink
+
+Patient --> Doctor : Рассказывает о жалобах, симптомах\nи передаёт медицинскую информацию (SPII)
+Doctor --> MedRecords : Вводит данные вручную:\nанамнез, диагноз, назначения
+
+note right of MedRecords
+  Файлы Excel/PDF/JPG хранятся на общем сетевом диске\n
+  ❌ Нет шифрования, ❌ нет разграничения прав,\n❌ нет журнала доступа (аудита)
+end note
+
+legend left
+  🔒 SPII — чувствительные персональные данные\n(диагнозы, анализы, жалобы)
+  🖐 Ручной ввод данных
+  ❌ Нет автоматизации, ❌ Нет защиты
+end legend
+
+@enduml
